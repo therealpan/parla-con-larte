@@ -1,67 +1,59 @@
 # Parla con l'Arte
 
-> Questo progetto è ospitato e sviluppato su **[Replit](https://replit.com)**.  
-> Non clonare o eseguire localmente senza configurare correttamente le variabili d'ambiente e le integrazioni Replit.
+Interfaccia vocale che permette di dialogare con le opere d'arte tramite agenti conversazionali ElevenLabs. Il primo agente è **Amore e Psiche**, la voce del Maestro Antonio Canova, che guida il visitatore alla scoperta della sua scultura.
 
----
-
-## Descrizione
-
-**Parla con l'Arte** è un'interfaccia vocale intelligente che permette agli utenti di dialogare con le opere d'arte attraverso agenti AI conversazionali alimentati da ElevenLabs.
-
-Il primo agente disponibile è **Amore e Psiche** — la voce del Maestro **Antonio Canova**, che guida personalmente il visitatore alla scoperta della sua scultura, raccontandone significato, ispirazione e segreti di esecuzione.
-
----
-
-## Stack Tecnologico
+## Stack
 
 | Layer | Tecnologia |
 |-------|-----------|
 | Frontend | React + Vite + Tailwind CSS + shadcn/ui |
-| Backend | Express.js (Node.js) |
+| Backend | Funzione serverless Vercel (`/api`) |
 | Voce AI | ElevenLabs Conversational AI |
-| Hosting | Replit |
-
----
+| Hosting | Vercel |
 
 ## Architettura
 
 ```
-client/          → Frontend React (Vite)
-server/          → Backend Express
-shared/          → Tipi e schema condivisi
-client/public/   → Asset statici (immagini, favicon)
+client/                       Frontend React (Vite)
+api/elevenlabs/signed-url.ts  Funzione serverless: genera il signed URL ElevenLabs
+attached_assets/              Immagini e logo
 ```
 
-- Il backend genera **signed URL** sicuri per inizializzare la conversazione con ElevenLabs
-- La chiave API ElevenLabs non è mai esposta al client
-- L'SDK `@elevenlabs/react` gestisce la conversazione vocale lato client
+Il frontend chiama `/api/elevenlabs/signed-url`, la funzione serverless usa la chiave `ELEVENLABS_API_KEY` per generare un signed URL e lo restituisce al client. La chiave non è mai esposta al browser. L'SDK `@elevenlabs/react` gestisce la conversazione vocale lato client.
 
----
+## Variabili d'ambiente
 
-## Configurazione Replit
+| Nome | Descrizione |
+|------|-------------|
+| `ELEVENLABS_API_KEY` | Chiave API ElevenLabs, usata solo lato server |
 
-Il progetto richiede le seguenti integrazioni configurate su Replit:
+Copia `.env.example` in `.env` per lo sviluppo locale, oppure imposta la variabile su Vercel in Project > Settings > Environment Variables.
 
-- **ElevenLabs** — connettore Replit per la gestione sicura della API key
-- **GitHub** — connettore Replit per la sincronizzazione del repository
+## Deploy su Vercel
 
-Le variabili d'ambiente sono gestite tramite il sistema di Secrets di Replit.
+1. Importa il repository su Vercel.
+2. Vercel rileva la configurazione da `vercel.json` (build `vite build`, output `dist`, rewrite SPA).
+3. In Settings > Environment Variables aggiungi `ELEVENLABS_API_KEY`.
+4. Deploy.
 
----
+## Sviluppo locale
 
-## Agente Configurato
+```bash
+npm install
+
+# solo UI (la funzione /api non viene servita)
+npm run dev
+
+# UI + funzione serverless insieme (richiede la Vercel CLI)
+npx vercel dev
+```
+
+Per provare la conversazione vocale in locale serve `vercel dev` con `ELEVENLABS_API_KEY` impostata, perché l'endpoint `/api/elevenlabs/signed-url` deve essere attivo.
+
+## Agente configurato
 
 | Campo | Valore |
 |-------|--------|
 | Nome | Amore e Psiche |
 | Agent ID | `agent_2701kh8essq0f9g8g2e1k2fcatnd` |
 | Opera | Amore e Psiche — Antonio Canova |
-
----
-
-## Note
-
-- Questo repository contiene solo il codice sorgente
-- Le credenziali e i segreti sono gestiti esclusivamente tramite Replit
-- Per contribuire o modificare il progetto, è necessario avere accesso al progetto su Replit
