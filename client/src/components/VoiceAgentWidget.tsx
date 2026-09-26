@@ -13,7 +13,7 @@ import { cn } from "@/lib/utils";
 const AGENT_NAME = "Amore e Psiche";
 const AGENT_DESCRIPTION =
   "Il Maestro Antonio Canova, vi guiderà personalmente alla scoperta della sua Amore e Psiche, raccontandone significato, ispirazione e segreti di esecuzione.";
-const AGENT_AVATAR = "/images/agent-avatar.jpg";
+const AGENT_AVATAR = `${import.meta.env.BASE_URL}images/agent-avatar.jpg`;
 
 function AudioVisualizer({
   isActive,
